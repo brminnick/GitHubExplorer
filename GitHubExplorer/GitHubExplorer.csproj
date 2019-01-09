@@ -50,11 +50,12 @@
     <Compile Include="Models\GraphQL Models\GraphQLResponse.cs" />
     <Compile Include="Services\GitHubGraphQLService.cs" />
     <Compile Include="Services\IGitHubAPI.cs" />
-    <Compile Include="GitHubConstants.cs" />
+    <Compile Include="GitHubConstants\GitHubConstants.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="Models\GraphQL Models\" />
+    <Folder Include="GitHubConstants\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
