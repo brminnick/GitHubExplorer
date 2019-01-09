@@ -11,7 +11,7 @@ namespace GitHubExplorer
     static class GitHubGraphQLService
     {
         #region Constant Fields
-        readonly static Lazy<IGitHubAPI >_graphQLApiClientHolder = new Lazy<IGitHubAPI>(()=> RestService.For<IGitHubAPI>("https://developer.github.com/v4/"));
+        readonly static Lazy<IGitHubAPI >_graphQLApiClientHolder = new Lazy<IGitHubAPI>(()=> RestService.For<IGitHubAPI>("/"));
         #endregion
 
         #region Properties
