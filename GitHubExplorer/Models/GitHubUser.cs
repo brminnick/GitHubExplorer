@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Newtonsoft.Json;
 
 namespace GitHubExplorer
@@ -33,6 +34,17 @@ namespace GitHubExplorer
 
         [JsonProperty("followers")]
         GitHubFollowers Followers { get; set; }
+
+        public override string ToString()
+        {
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine($"{nameof(Name)}: {Name}");
+            stringBuilder.AppendLine($"{nameof(Company)}: {Company}");
+            stringBuilder.AppendLine($"{nameof(FollowerCount)}: {FollowerCount}");
+            stringBuilder.AppendLine($"{nameof(AccountCreationDate)}: {AccountCreationDate}");
+
+            return stringBuilder.ToString();
+        }
     }
 
     public class GitHubFollowers

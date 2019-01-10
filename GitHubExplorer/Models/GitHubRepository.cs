@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text;
+using Newtonsoft.Json;
 
 namespace GitHubExplorer
 {
@@ -35,6 +36,18 @@ namespace GitHubExplorer
 
         [JsonProperty("owner")]
         Owner RepositoryOwner { get; set; }
+
+        public override string ToString()
+        {
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine($"{nameof(Name)}: {Name}");
+            stringBuilder.AppendLine($"{nameof(Owner)}: {Owner}");
+            stringBuilder.AppendLine($"{nameof(Description)}: {Description}");
+            stringBuilder.AppendLine($"{nameof(ForkCount)}: {ForkCount}");
+            stringBuilder.AppendLine($"{nameof(Issues)} Count: {Issues.IssueList.Count}");
+
+            return stringBuilder.ToString();
+        }
 
     }
 
