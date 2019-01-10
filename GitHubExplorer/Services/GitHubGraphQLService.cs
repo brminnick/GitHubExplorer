@@ -28,7 +28,7 @@ namespace GitHubExplorer
             return data.User;
         }
 
-        public static async Task<GitHubRepository> GetRepository(string repositoryOwner, string repositoryName, int numberOfIssuesToRequest = 10)
+        public static async Task<GitHubRepository> GetRepository(string repositoryOwner, string repositoryName, int numberOfIssuesToRequest = 100)
         {
             var requestString = "query { repository(owner:\"" + repositoryOwner + "\" name:\"" + repositoryName + "\"){ name, description, forkCount, owner { login }, issues(first:" + numberOfIssuesToRequest + "){ nodes { title, body, createdAt, closedAt, state }}}}";
 

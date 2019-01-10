@@ -44,7 +44,7 @@ namespace GitHubExplorer
             stringBuilder.AppendLine($"{nameof(Owner)}: {Owner}");
             stringBuilder.AppendLine($"{nameof(Description)}: {Description}");
             stringBuilder.AppendLine($"{nameof(ForkCount)}: {ForkCount}");
-            stringBuilder.AppendLine($"{nameof(Issues)} Count: {Issues.IssueList.Count}");
+            stringBuilder.AppendLine($"{nameof(Issues)}Count: {Issues.IssueList.Count}");
 
             return stringBuilder.ToString();
         }
