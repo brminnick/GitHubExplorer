@@ -11,49 +11,47 @@ namespace GitHubExplorer
     static class GitHubGraphQLService
     {
         #region Constant Fields
-        readonly static Lazy<IGitHubAPI >_graphQLApiClientHolder = new Lazy<IGitHubAPI>(()=> RestService.For<IGitHubAPI>("/"));
+        readonly static Lazy<IGitHubAPI> _githubApiClientHolder = new Lazy<IGitHubAPI>(() => RestService.For<IGitHubAPI>(GitHubConstants.APIUrl));
         #endregion
 
         #region Properties
-        static IGitHubAPI GraphQLApiClient => _graphQLApiClientHolder.Value;
+        static IGitHubAPI GitHubApiClient => _githubApiClientHolder.Value;
         #endregion
 
         #region Methods
-        public static async Task<List<TeamScore>> GetTeamScoreList()
+        public static async Task<GitHubUser> GetUser(string username)
         {
-            const string requestString = "query{teams{name, points}}";
+            var requestString = "query { user(login:" + username + "){ name,company,createdAt, followers{ totalCount }}}";
 
-            var request = await ExecutePollyFunction(() => GraphQLApiClient.TeamsQuery(new GraphQLRequest(requestString))).ConfigureAwait(false);
+            var data = await ExecuteGraphQLRequest(() => GitHubApiClient.UserQuery(new GraphQLRequest(requestString))).ConfigureAwait(false);
 
-            if (request.Errors != null)
-                throw new AggregateException(request.Errors.Select(x => new Exception(x.Message)));
-
-            return request.Data.Teams;
+            return data.User;
         }
 
-        public static async Task<TeamScore> VoteForTeamAndGetCurrentScore(TeamColor teamType)
+        public static async Task<GitHubRepository> GetRepository(string repositoryOwner, string repositoryName, int numberOfIssuesToRequest = 10)
         {
-            var request = "mutation {incrementPoints(id:" + (int)teamType + ") {name, points}}";
+            var requestString = "query { repository(owner:\"" + repositoryOwner + "\" name:\"" + repositoryName + "\"){ name, description, forkCount, owner { login }, issues(first:" + numberOfIssuesToRequest + "){ nodes { title, body, createdAt, closedAt, state }}}}";
 
-            var response = await ExecutePollyFunction(() => GraphQLApiClient.IncrementPoints(new GraphQLRequest(request))).ConfigureAwait(false);
+            var data = await ExecuteGraphQLRequest(() => GitHubApiClient.RepositoryQuery(new GraphQLRequest(requestString))).ConfigureAwait(false);
+
+            return data.Repository;
+        }
+
+        static async Task<T> ExecuteGraphQLRequest<T>(Func<Task<GraphQLResponse<T>>> action, int numRetries = 3)
+        {
+            var response = await Policy
+                                .Handle<Exception>()
+                                .WaitAndRetryAsync
+                                (
+                                    numRetries,
+                                    pollyRetryAttempt
+                                ).ExecuteAsync(action);
+
 
             if (response.Errors != null)
                 throw new AggregateException(response.Errors.Select(x => new Exception(x.Message)));
 
-            return response.Data.TeamScore;
-        }
-
-        public static Task VoteForTeam(TeamColor teamType) => VoteForTeamAndGetCurrentScore(teamType);
-
-        static Task<T> ExecutePollyFunction<T>(Func<Task<T>> action, int numRetries = 3)
-        {
-            return Policy
-                    .Handle<Exception>()
-                    .WaitAndRetryAsync
-                    (
-                        numRetries,
-                        pollyRetryAttempt
-                    ).ExecuteAsync(action);
+            return response.Data;
 
             TimeSpan pollyRetryAttempt(int attemptNumber) => TimeSpan.FromSeconds(Math.Pow(2, attemptNumber));
         }

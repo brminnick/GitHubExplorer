@@ -3,14 +3,15 @@ using Refit;
 
 namespace GitHubExplorer
 {
-    [Headers("Accept-Encoding: gzip",
-                "Accept: application/json")]
+    [Headers("Content-Type: application/json",
+                "Authorization: bearer " + GitHubConstants.BearerToken,
+                "User-Agent: GitHubExplorer")]
     interface IGitHubAPI
     {
         [Post("")]
-        Task<GraphQLResponse<TeamsQueryDataResponse>> UserQuery([Body] GraphQLRequest request);
+        Task<GraphQLResponse<GitHubUserResponse>> UserQuery([Body] GraphQLRequest request);
 
         [Post("")]
-        Task<GraphQLResponse<IncrementPointsDataResponse>> IncrementPoints([Body] GraphQLRequest request);
+        Task<GraphQLResponse<GitHubRepositoryResponse>> RepositoryQuery([Body] GraphQLRequest request);
     }
 }

@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace GitHubExplorer
 {
     class MainClass
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var user = await GitHubGraphQLService.GetUser("brminnick");
+            var repo = await GitHubGraphQLService.GetRepository("brminnick", "AsyncAwaitBestPractices");
         }
     }
 }
