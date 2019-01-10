@@ -4,7 +4,7 @@ using Refit;
 namespace GitHubExplorer
 {
     [Headers("Content-Type: application/json",
-                "Authorization: bearer " + GitHubConstants.BearerToken,
+                "Authorization: bearer " + GitHubConstants.PersonalAccessToken,
                 "User-Agent: GitHubExplorer")]
     interface IGitHubAPI
     {
