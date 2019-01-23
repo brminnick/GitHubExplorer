@@ -12,41 +12,43 @@ namespace GitHubExplorer
             var userList = GitHubConstants.GitHubRepoDictionary.Values.Distinct();
             var repositoryDictionary = GitHubConstants.GitHubRepoDictionary;
 
-            await PrintUsers(userList).ConfigureAwait(false);
-            await PrintRepositories(repositoryDictionary).ConfigureAwait(false);
+            await foreach (var user in GetUsers(userList))
+            {
+                Console.WriteLine(user);
+            }
+
+            await foreach (var repository in GetRepositories(repositoryDictionary)
+            {
+                Console.WriteLine(repository);
+            }
 
             Console.ReadLine();
         }
 
-        static async Task PrintUsers(IEnumerable<string> userList)
+        static async IAsyncEnumerable<GitHubUser> GetUsers(IEnumerable<string> userList)
         {
             var getUserTaskList = userList.Select(GitHubGraphQLService.GetUser).ToList();
 
-            while (getUserTaskList.Any())
+            while (getUserTaskList.Any(x => !x.IsCompleted))
             {
-                var getUserTask = await Task.WhenAny(getUserTaskList).ConfigureAwait(false);
+                var finishedgetUserTask = await Task.WhenAny(getUserTaskList).ConfigureAwait(false);
+                var user = await finishedgetUserTask.ConfigureAwait(false);
 
-                var user = await getUserTask.ConfigureAwait(false);
-
-                Console.WriteLine(user);
-
-                getUserTaskList.Remove(getUserTask);
+                yield return user;
             }
         }
 
-        static async Task PrintRepositories(Dictionary<string, string> repositoryDictionary)
+        static async IAsyncEnumerable<GitHubRepository> GetRepositories(Dictionary<string, string> repositoryDictionary)
         {
             var getRepositoryTaskList = repositoryDictionary.Select(x => GitHubGraphQLService.GetRepository(x.Value, x.Key)).ToList();
 
-            while (getRepositoryTaskList.Any())
+            while (getRepositoryTaskList.Any(x => !x.IsCompleted))
             {
                 var finishedGetRepositoryTask = await Task.WhenAny(getRepositoryTaskList).ConfigureAwait(false);
 
-                var user = await finishedGetRepositoryTask.ConfigureAwait(false);
+                var repository = await finishedGetRepositoryTask.ConfigureAwait(false);
 
-                Console.WriteLine(user);
-
-                getRepositoryTaskList.Remove(finishedGetRepositoryTask);
+                yield return repository;
             }
         }
     }
