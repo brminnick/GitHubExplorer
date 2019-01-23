@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitHubExplorer", "GitHubExplorer\GitHubExplorer.csproj", "{E1E0FB2D-4B73-4270-A057-F2D2BF3DA902}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitHubExplorer", "GitHubExplorer\GitHubExplorer.csproj", "{46A13852-CF96-4C60-8D53-2FF3648E85CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,9 +9,9 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E1E0FB2D-4B73-4270-A057-F2D2BF3DA902}.Debug|x86.ActiveCfg = Debug|x86
-		{E1E0FB2D-4B73-4270-A057-F2D2BF3DA902}.Debug|x86.Build.0 = Debug|x86
-		{E1E0FB2D-4B73-4270-A057-F2D2BF3DA902}.Release|x86.ActiveCfg = Release|x86
-		{E1E0FB2D-4B73-4270-A057-F2D2BF3DA902}.Release|x86.Build.0 = Release|x86
+		{46A13852-CF96-4C60-8D53-2FF3648E85CE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{46A13852-CF96-4C60-8D53-2FF3648E85CE}.Debug|x86.Build.0 = Debug|Any CPU
+		{46A13852-CF96-4C60-8D53-2FF3648E85CE}.Release|x86.ActiveCfg = Release|Any CPU
+		{46A13852-CF96-4C60-8D53-2FF3648E85CE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
