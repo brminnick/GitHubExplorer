@@ -6,11 +6,10 @@ namespace GitHubExplorer
 {
     class GraphQLError
     {
-        public GraphQLError(string message, GraphQLLocation[] locations, IDictionary<string, JToken> additonalEntries = null)
+        public GraphQLError(string message, GraphQLLocation[] locations)
         {
             Message = message;
             Locations = locations;
-            AdditonalEntries = additonalEntries;
         }
 
         [JsonProperty("message")]
@@ -20,7 +19,7 @@ namespace GitHubExplorer
         public GraphQLLocation[] Locations { get; }
 
         [JsonExtensionData]
-        public IDictionary<string, JToken> AdditonalEntries { get; }
+        public IDictionary<string, JToken> AdditonalEntries { get; set; }
     }
 
     class GraphQLLocation
