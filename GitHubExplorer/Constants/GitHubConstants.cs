@@ -28,11 +28,11 @@ namespace GitHubExplorer
             {"redis-sharp","migueldeicaza"},
 
             {"ModernHttpClient","paulcbetts"},
-            {"Fusillade","paulcbetts"},
             {"SassAndCoffee","paulcbetts"},
-            {"punchclock","paulcbetts"},
             {"starter-mobile","paulcbetts"},
             {"grunt-build-atom-shell","paulcbetts"},
+            {"spawn-rx","paulcbetts"},
+            {"LinqToAwait","paulcbetts"},
 
             {"CodeBucket","thedillonb"},
             {"RepoStumble","thedillonb"},
