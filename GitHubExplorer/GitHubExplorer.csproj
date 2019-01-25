@@ -1,18 +1,22 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <OutputType>Exe</OutputType>
-        <TargetFramework>netcoreapp3.0</TargetFramework>
-        <LangVersion>Latest</LangVersion>
-    </PropertyGroup>
-    <ItemGroup>
-        <Folder Include="Constants\" />
-        <Folder Include="Models\" />
-        <Folder Include="Services\" />
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Polly" Version="6.1.2" />
-        <PackageReference Include="Refit" Version="4.6.58" />
-        <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-    </ItemGroup>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+    <NullableContextOptions>enable</NullableContextOptions>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>0</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Constants\" />
+    <Folder Include="Models\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Polly" Version="6.1.2" />
+    <PackageReference Include="Refit" Version="4.6.58" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+  </ItemGroup>
 </Project>

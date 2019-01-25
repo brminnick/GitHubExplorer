@@ -17,7 +17,7 @@ namespace GitHubExplorer
                 Console.WriteLine(user);
             }
 
-            await foreach (var repository in GetRepositories(repositoryDictionary)
+            await foreach (var repository in GetRepositories(repositoryDictionary))
             {
                 Console.WriteLine(repository);
             }
