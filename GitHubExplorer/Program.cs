@@ -29,10 +29,12 @@ namespace GitHubExplorer
         {
             var getUserTaskList = userList.Select(GitHubGraphQLService.GetUser).ToList();
 
-            while (getUserTaskList.Any(x => !x.IsCompleted))
+            while (getUserTaskList.Any())
             {
-                var finishedgetUserTask = await Task.WhenAny(getUserTaskList).ConfigureAwait(false);
-                var user = await finishedgetUserTask.ConfigureAwait(false);
+                var finishedGetUserTask = await Task.WhenAny(getUserTaskList).ConfigureAwait(false);
+                getUserTaskList.Remove(finishedGetUserTask);
+
+                var user = await finishedGetUserTask.ConfigureAwait(false);
 
                 yield return user;
             }
@@ -42,9 +44,10 @@ namespace GitHubExplorer
         {
             var getRepositoryTaskList = repositoryDictionary.Select(x => GitHubGraphQLService.GetRepository(x.Value, x.Key)).ToList();
 
-            while (getRepositoryTaskList.Any(x => !x.IsCompleted))
+            while (getRepositoryTaskList.Any())
             {
                 var finishedGetRepositoryTask = await Task.WhenAny(getRepositoryTaskList).ConfigureAwait(false);
+                getRepositoryTaskList.Remove(finishedGetRepositoryTask);
 
                 var repository = await finishedGetRepositoryTask.ConfigureAwait(false);
 
