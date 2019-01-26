@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using Refit;
 using Polly;
+using System.Threading;
 
 namespace GitHubExplorer
 {
@@ -28,13 +29,35 @@ namespace GitHubExplorer
             return data.User;
         }
 
-        public static async Task<GitHubRepository> GetRepository(string repositoryOwner, string repositoryName, int numberOfIssuesToRequest = 100)
+        public static async Task<GitHubRepository> GetRepository(string repositoryOwner, string repositoryName)
         {
-            var requestString = "query { repository(owner:\"" + repositoryOwner + "\" name:\"" + repositoryName + "\"){ name, description, forkCount, owner { login }, issues(first:" + numberOfIssuesToRequest + "){ nodes { title, body, createdAt, closedAt, state }}}}";
+            var requestString = "query { repository(owner:\"" + repositoryOwner + "\" name:\"" + repositoryName + "\"){ name, description, forkCount, owner { login }, stargazers { totalCount }}}";
 
             var data = await ExecuteGraphQLRequest(() => GitHubApiClient.RepositoryQuery(new GraphQLRequest(requestString))).ConfigureAwait(false);
 
             return data.Repository;
+        }
+
+        public static async IAsyncEnumerable<GitHubIssue> GetRepositoryIssues(string repositoryOwner, string repositoryName, int numberOfIssuesPerRequest = 100, CancellationToken cancellationToken = null)
+        {
+            IssuesConnection issuesConnection = null;
+
+            do
+            {
+                issuesConnection = await GetIssueConnection(repositoryOwner, repositoryName, numberOfIssuesPerRequest, issuesConnection?.PageInfo?.EndCursor).ConfigureAwait(false);
+
+                yield return issuesConnection.IssueList;
+            }
+            while (!cancellationToken.IsCancellationRequested && (issuesConnection?.PageInfo?.HasNextPage ?? false));
+        }
+
+        static async Task<IssuesConnection> GetIssueConnection(string repositoryOwner, string repositoryName, int numberOfIssuesPerRequest, string endCursor)
+        {
+            var requestString = "query { repository(owner:\"" + repositoryOwner + "\" name:\"" + repositoryName + "\"){ issues(first:" + numberOfIssuesToRequest + (string.IsNullOrWhiteSpace(endCursor) ? "" : $"after: {endCursor}" + "){ nodes { title, body, createdAt, closedAt, state }}}}";
+
+            var data = await ExecuteGraphQLRequest(() => GitHubApiClient.RepositoryIssuesQuery(new GraphQLRequest(requestString))).ConfigureAwait(false);
+
+            return data.Repository.Issues;
         }
 
         static async Task<T> ExecuteGraphQLRequest<T>(Func<Task<GraphQLResponse<T>>> action, int numRetries = 3)

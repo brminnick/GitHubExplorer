@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace GitHubExplorer
 {
@@ -20,6 +21,16 @@ namespace GitHubExplorer
             await foreach (var repository in GetRepositories(repositoryDictionary))
             {
                 Console.WriteLine(repository);
+            }
+
+            int issueCount = 0;
+            var getIssueCancellationToken = new CancellationTokenSource();
+            await foreach (var issue in GitHubGraphQLService.GetRepositoryIssues(GitHubConstants.GitHubRepoDictionary.First().Value, GitHubConstants.GitHubRepoDictionary.First().Key, cancellationToken: getIssueCancellationToken))
+            {
+                Console.WriteLine(issue);
+
+                if (++issueCount > 5)
+                    getIssueCancellationToken.Cancel();
             }
 
             Console.ReadLine();

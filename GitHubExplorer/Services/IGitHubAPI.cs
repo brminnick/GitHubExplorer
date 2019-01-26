@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Refit;
 
 namespace GitHubExplorer
@@ -13,5 +14,8 @@ namespace GitHubExplorer
 
         [Post("")]
         Task<GraphQLResponse<GitHubRepositoryResponse>> RepositoryQuery([Body] GraphQLRequest request);
+
+        [Post("")]
+        Task<GraphQLResponse<GitHubRepositoryResponse>> RepositoryIssuesQuery([Body] GraphQLRequest request);
     }
 }
