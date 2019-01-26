@@ -10,27 +10,24 @@ namespace GitHubExplorer
     {
         public static async Task Main(string[] args)
         {
-            var userList = GitHubConstants.GitHubRepoDictionary.Values.Distinct();
-            var repositoryDictionary = GitHubConstants.GitHubRepoDictionary;
+            var username = GitHubConstants.GitHubRepoDictionary.Values.First();
+            var repositoryName = GitHubConstants.GitHubRepoDictionary.Keys.First();
 
-            await foreach (var user in GetUsers(userList))
+            var gitHubUser = await GitHubGraphQLService.GetUser(username).ConfigureAwait(false);
+            Console.WriteLine(gitHubUser);
+
+            var gitHubRepository = await GitHubGraphQLService.GetRepository(username, repositoryName).ConfigureAwait(false);
+            Console.WriteLine(gitHubRepository);
+
+            var count = 0;
+            var cancellationTokenSournce = new CancellationTokenSource();
+            await foreach(var issueList in GitHubGraphQLService.GetRepositoryIssues(username,repositoryName, cancellationTokenSournce.Token))
             {
-                Console.WriteLine(user);
-            }
+                foreach (var issue in issueList)
+                    Console.WriteLine(issue);
 
-            await foreach (var repository in GetRepositories(repositoryDictionary))
-            {
-                Console.WriteLine(repository);
-            }
-
-            int issueCount = 0;
-            var getIssueCancellationToken = new CancellationTokenSource();
-            await foreach (var issue in GitHubGraphQLService.GetRepositoryIssues(GitHubConstants.GitHubRepoDictionary.First().Value, GitHubConstants.GitHubRepoDictionary.First().Key, cancellationToken: getIssueCancellationToken))
-            {
-                Console.WriteLine(issue);
-
-                if (++issueCount > 5)
-                    getIssueCancellationToken.Cancel();
+                if (++count > 5)
+                    cancellationTokenSournce.Cancel();
             }
 
             Console.ReadLine();

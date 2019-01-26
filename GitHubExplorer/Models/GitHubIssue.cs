@@ -33,7 +33,6 @@ namespace GitHubExplorer
             stringBuilder.AppendLine($"{nameof(CreatedAt)}: {CreatedAt}");
             stringBuilder.AppendLine($"{nameof(ClosedAt)}: {ClosedAt}");
             stringBuilder.AppendLine($"{nameof(State)}: {State}");
-            stringBuilder.AppendLine($"{nameof(Body)}: {Body}");
 
             return stringBuilder.ToString();
         }

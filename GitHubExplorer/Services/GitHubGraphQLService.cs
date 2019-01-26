@@ -38,7 +38,7 @@ namespace GitHubExplorer
             return data.Repository;
         }
 
-        public static async IAsyncEnumerable<GitHubIssue> GetRepositoryIssues(string repositoryOwner, string repositoryName, int numberOfIssuesPerRequest = 100, CancellationToken cancellationToken = null)
+        public static async IAsyncEnumerable<List<GitHubIssue>> GetRepositoryIssues(string repositoryOwner, string repositoryName, CancellationToken cancellationToken, int numberOfIssuesPerRequest = 100)
         {
             IssuesConnection issuesConnection = null;
 
@@ -53,7 +53,9 @@ namespace GitHubExplorer
 
         static async Task<IssuesConnection> GetIssueConnection(string repositoryOwner, string repositoryName, int numberOfIssuesPerRequest, string endCursor)
         {
-            var requestString = "query { repository(owner:\"" + repositoryOwner + "\" name:\"" + repositoryName + "\"){ issues(first:" + numberOfIssuesToRequest + (string.IsNullOrWhiteSpace(endCursor) ? "" : $"after: {endCursor}" + "){ nodes { title, body, createdAt, closedAt, state }}}}";
+            var endCursorString = string.IsNullOrWhiteSpace(endCursor) ? string.Empty : "after: \"" + endCursor + "\"";
+
+            var requestString = "query { repository(owner:\"" + repositoryOwner + "\" name:\"" + repositoryName + "\"){ issues(first:" + numberOfIssuesPerRequest + endCursorString + "){ nodes { title, body, createdAt, closedAt, state }, pageInfo { endCursor, hasNextPage, hasPreviousPage, startCursor }}}}";
 
             var data = await ExecuteGraphQLRequest(() => GitHubApiClient.RepositoryIssuesQuery(new GraphQLRequest(requestString))).ConfigureAwait(false);
 

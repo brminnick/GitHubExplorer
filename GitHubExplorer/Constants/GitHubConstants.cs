@@ -10,6 +10,9 @@ namespace GitHubExplorer
 
         public static readonly Dictionary<string, string> GitHubRepoDictionary = new Dictionary<string, string>
         {
+            {"Newtonsoft.Json","jamesnk"},
+            {"Newtonsoft.Json.Schema","jamesnk"},
+
             {"AsyncAwaitBestPractices","brminnick"},
             {"ImproveXamarinBuildTimes","brminnick"},
             {"FaceOff","brminnick"},
@@ -59,9 +62,6 @@ namespace GitHubExplorer
             {"FlamedTVLauncher","Redth"},
             {"AndHUD","Redth"},
             {"HttpTwo","Redth"},
-
-            {"Newtonsoft.Json","jamesnk"},
-            {"Newtonsoft.Json.Schema","jamesnk"}
         };
     }
 }
