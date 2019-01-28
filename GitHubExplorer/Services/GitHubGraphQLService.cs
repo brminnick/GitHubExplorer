@@ -48,7 +48,7 @@ namespace GitHubExplorer
 
                 yield return issuesConnection.IssueList;
             }
-            while (!cancellationToken.IsCancellationRequested && (issuesConnection?.PageInfo?.HasNextPage ?? false));
+            while (!cancellationToken.IsCancellationRequested && (issuesConnection?.PageInfo?.HasNextPage is true));
         }
 
         static async Task<IssuesConnection> GetIssueConnection(string repositoryOwner, string repositoryName, int numberOfIssuesPerRequest, string endCursor)
@@ -70,7 +70,7 @@ namespace GitHubExplorer
                                 (
                                     numRetries,
                                     pollyRetryAttempt
-                                ).ExecuteAsync(action);
+                                ).ExecuteAsync(action).ConfigureAwait(false);
 
 
             if (response.Errors != null)
