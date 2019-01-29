@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 
-using Refit;
 using Polly;
+using Refit;
 
 namespace GitHubExplorer
 {
     static class GitHubGraphQLService
     {
         #region Constant Fields
-        readonly static Lazy<IGitHubAPI> _githubApiClientHolder = new Lazy<IGitHubAPI>(() => RestService.For<IGitHubAPI>(GitHubConstants.APIUrl));
+        readonly static Lazy<IGitHubAPI> _githubApiClientHolder = new Lazy<IGitHubAPI>(() => RestService.For<IGitHubAPI>(CreateHttpClient()));
         #endregion
 
         #region Properties
@@ -54,6 +54,14 @@ namespace GitHubExplorer
             return response.Data;
 
             TimeSpan pollyRetryAttempt(int attemptNumber) => TimeSpan.FromSeconds(Math.Pow(2, attemptNumber));
+        }
+
+        static HttpClient CreateHttpClient()
+        {
+            return new HttpClient(new HttpClientHandler { AutomaticDecompression = System.Net.DecompressionMethods.GZip })
+            {
+                BaseAddress = new Uri(GitHubConstants.APIUrl)
+            };
         }
         #endregion
     }
