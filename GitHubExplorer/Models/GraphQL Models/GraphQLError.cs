@@ -6,11 +6,7 @@ namespace GitHubExplorer
 {
     class GraphQLError
     {
-        public GraphQLError(string message, GraphQLLocation[] locations)
-        {
-            Message = message;
-            Locations = locations;
-        }
+        public GraphQLError(string message, GraphQLLocation[] locations) => (Message, Locations) = (message, locations);
 
         [JsonProperty("message")]
         public string Message { get; }
