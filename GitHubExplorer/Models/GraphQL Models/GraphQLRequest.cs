@@ -4,11 +4,7 @@ namespace GitHubExplorer
 {
     class GraphQLRequest
     {
-        public GraphQLRequest(string query, string variables = null)
-        {
-            Query = query;
-            Variables = variables;
-        }
+        public GraphQLRequest(string query, string variables = null) => (Query, Variables) = (query, variables);
 
         [JsonProperty("query")]
         public string Query { get; }
