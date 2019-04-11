@@ -30,37 +30,8 @@ namespace GitHubExplorer
                     cancellationTokenSournce.Cancel();
             }
 
+            Console.WriteLine("Completed. Press Any Key.");
             Console.ReadLine();
-        }
-
-        static async IAsyncEnumerable<GitHubUser> GetUsers(IEnumerable<string> userList)
-        {
-            var getUserTaskList = userList.Select(GitHubGraphQLService.GetUser).ToList();
-
-            while (getUserTaskList.Any())
-            {
-                var finishedGetUserTask = await Task.WhenAny(getUserTaskList).ConfigureAwait(false);
-                getUserTaskList.Remove(finishedGetUserTask);
-
-                var user = await finishedGetUserTask.ConfigureAwait(false);
-
-                yield return user;
-            }
-        }
-
-        static async IAsyncEnumerable<GitHubRepository> GetRepositories(Dictionary<string, string> repositoryDictionary)
-        {
-            var getRepositoryTaskList = repositoryDictionary.Select(x => GitHubGraphQLService.GetRepository(x.Value, x.Key)).ToList();
-
-            while (getRepositoryTaskList.Any())
-            {
-                var finishedGetRepositoryTask = await Task.WhenAny(getRepositoryTaskList).ConfigureAwait(false);
-                getRepositoryTaskList.Remove(finishedGetRepositoryTask);
-
-                var repository = await finishedGetRepositoryTask.ConfigureAwait(false);
-
-                yield return repository;
-            }
         }
     }
 }
