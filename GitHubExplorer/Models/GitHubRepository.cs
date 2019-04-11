@@ -8,7 +8,8 @@ namespace GitHubExplorer
         public GitHubRepository() { }
 
         [JsonConstructor]
-        public GitHubRepository(Owner owner) => RepositoryOwner = owner;
+        public GitHubRepository(Owner owner, Stargazers stargazers) =>
+            (RepositoryOwner, RepositoryStargazers) = (owner, stargazers);
 
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -20,7 +21,7 @@ namespace GitHubExplorer
         public long ForkCount { get; set; }
 
         [JsonProperty("issues")]
-        public Issues Issues { get; set; }
+        public IssuesConnection Issues { get; set; }
 
         public string Owner
         {
@@ -34,8 +35,23 @@ namespace GitHubExplorer
             }
         }
 
+        public int Stargazers
+        {
+            get => RepositoryStargazers?.TotalCount ?? -1;
+            set
+            {
+                if (RepositoryStargazers is null)
+                    RepositoryStargazers = new Stargazers { TotalCount = value };
+                else
+                    RepositoryStargazers.TotalCount = value;
+            }
+        }
+
         [JsonProperty("owner")]
         Owner RepositoryOwner { get; set; }
+
+        [JsonProperty("stargazers")]
+        Stargazers RepositoryStargazers { get; set; }
 
         public override string ToString()
         {
@@ -44,7 +60,7 @@ namespace GitHubExplorer
             stringBuilder.AppendLine($"{nameof(Owner)}: {Owner}");
             stringBuilder.AppendLine($"{nameof(Description)}: {Description}");
             stringBuilder.AppendLine($"{nameof(ForkCount)}: {ForkCount}");
-            stringBuilder.AppendLine($"{nameof(Issues)}Count: {Issues.IssueList.Count}");
+            stringBuilder.AppendLine($"{nameof(Stargazers)}: {Stargazers}");
 
             return stringBuilder.ToString();
         }
@@ -55,5 +71,11 @@ namespace GitHubExplorer
     {
         [JsonProperty("login")]
         public string Login { get; set; }
+    }
+
+    public class Stargazers
+    {
+        [JsonProperty("totalCount")]
+        public int TotalCount { get; set; }
     }
 }

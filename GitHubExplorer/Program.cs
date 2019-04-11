@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace GitHubExplorer
 {
@@ -9,44 +10,56 @@ namespace GitHubExplorer
     {
         public static async Task Main(string[] args)
         {
-            var userList = GitHubConstants.GitHubRepoDictionary.Values.Distinct();
-            var repositoryDictionary = GitHubConstants.GitHubRepoDictionary;
+            var username = GitHubConstants.GitHubRepoDictionary.Values.First();
+            var repositoryName = GitHubConstants.GitHubRepoDictionary.Keys.First();
 
-            await PrintUsers(userList).ConfigureAwait(false);
-            await PrintRepositories(repositoryDictionary).ConfigureAwait(false);
+            var gitHubUser = await GitHubGraphQLService.GetUser(username).ConfigureAwait(false);
+            Console.WriteLine(gitHubUser);
+
+            var gitHubRepository = await GitHubGraphQLService.GetRepository(username, repositoryName).ConfigureAwait(false);
+            Console.WriteLine(gitHubRepository);
+
+            var count = 0;
+            var cancellationTokenSournce = new CancellationTokenSource();
+            await foreach(var issueList in GitHubGraphQLService.GetRepositoryIssues(username,repositoryName, cancellationTokenSournce.Token))
+            {
+                foreach (var issue in issueList)
+                    Console.WriteLine(issue);
+
+                if (++count > 5)
+                    cancellationTokenSournce.Cancel();
+            }
 
             Console.ReadLine();
         }
 
-        static async Task PrintUsers(IEnumerable<string> userList)
+        static async IAsyncEnumerable<GitHubUser> GetUsers(IEnumerable<string> userList)
         {
             var getUserTaskList = userList.Select(GitHubGraphQLService.GetUser).ToList();
 
             while (getUserTaskList.Any())
             {
-                var getUserTask = await Task.WhenAny(getUserTaskList).ConfigureAwait(false);
+                var finishedGetUserTask = await Task.WhenAny(getUserTaskList).ConfigureAwait(false);
+                getUserTaskList.Remove(finishedGetUserTask);
 
-                var user = await getUserTask.ConfigureAwait(false);
+                var user = await finishedGetUserTask.ConfigureAwait(false);
 
-                Console.WriteLine(user);
-
-                getUserTaskList.Remove(getUserTask);
+                yield return user;
             }
         }
 
-        static async Task PrintRepositories(Dictionary<string, string> repositoryDictionary)
+        static async IAsyncEnumerable<GitHubRepository> GetRepositories(Dictionary<string, string> repositoryDictionary)
         {
             var getRepositoryTaskList = repositoryDictionary.Select(x => GitHubGraphQLService.GetRepository(x.Value, x.Key)).ToList();
 
             while (getRepositoryTaskList.Any())
             {
                 var finishedGetRepositoryTask = await Task.WhenAny(getRepositoryTaskList).ConfigureAwait(false);
-
-                var user = await finishedGetRepositoryTask.ConfigureAwait(false);
-
-                Console.WriteLine(user);
-
                 getRepositoryTaskList.Remove(finishedGetRepositoryTask);
+
+                var repository = await finishedGetRepositoryTask.ConfigureAwait(false);
+
+                yield return repository;
             }
         }
     }
