@@ -10,9 +10,9 @@ namespace GitHubExplorer
             (IssueList, PageInfo) = (issueList, pageInfo);
 
         [JsonProperty("nodes")]
-        public List<GitHubIssue> IssueList { get; set; }
+        public List<GitHubIssue> IssueList { get; }
 
         [JsonProperty("pageInfo")]
-        public PageInfo PageInfo { get; set; }
+        public PageInfo PageInfo { get; }
     }
 }

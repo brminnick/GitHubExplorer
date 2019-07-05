@@ -5,9 +5,6 @@ namespace GitHubExplorer
 {
     public class GitHubRepository
     {
-        public GitHubRepository() { }
-
-        [JsonConstructor]
         public GitHubRepository(Owner owner, Stargazers stargazers) =>
             (RepositoryOwner, RepositoryStargazers) = (owner, stargazers);
 

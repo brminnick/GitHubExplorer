@@ -95,14 +95,7 @@ namespace GitHubExplorer
 
         static async Task<T> ExecuteGraphQLRequest<T>(Func<Task<GraphQLResponse<T>>> action, int numRetries = 3)
         {
-            var response = await Policy
-                                .Handle<Exception>()
-                                .WaitAndRetryAsync
-                                (
-                                    numRetries,
-                                    pollyRetryAttempt
-                                ).ExecuteAsync(action).ConfigureAwait(false);
-
+            var response = await Policy.Handle<Exception>().WaitAndRetryAsync(numRetries, pollyRetryAttempt).ExecuteAsync(action).ConfigureAwait(false);
 
             if (response.Errors != null)
                 throw new AggregateException(response.Errors.Select(x => new Exception(x.Message)));

@@ -6,8 +6,6 @@ namespace GitHubExplorer
 {
     public class GitHubUser
     {
-        public GitHubUser() { }
-
         [JsonConstructor]
         public GitHubUser(GitHubFollowers followers) => Followers = followers;
 
