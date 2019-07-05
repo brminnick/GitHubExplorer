@@ -21,7 +21,7 @@ namespace GitHubExplorer
 
             var count = 0;
             var cancellationTokenSournce = new CancellationTokenSource();
-            await foreach(var issueList in GitHubGraphQLService.GetRepositoryIssues(username,repositoryName, cancellationTokenSournce.Token))
+            await foreach (var issueList in GitHubGraphQLService.GetRepositoryIssues(username, repositoryName, cancellationTokenSournce.Token))
             {
                 foreach (var issue in issueList)
                     Console.WriteLine(issue);
