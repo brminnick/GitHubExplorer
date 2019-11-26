@@ -19,15 +19,22 @@ namespace GitHubExplorer
             var gitHubRepository = await GitHubGraphQLService.GetRepository(username, repositoryName).ConfigureAwait(false);
             Console.WriteLine(gitHubRepository);
 
-            var count = 0;
-            var cancellationTokenSournce = new CancellationTokenSource();
-            await foreach (var issueList in GitHubGraphQLService.GetRepositoryIssues(username, repositoryName, cancellationTokenSournce.Token))
+            try
             {
-                foreach (var issue in issueList)
-                    Console.WriteLine(issue);
+                var count = 0;
+                var cancellationTokenSournce = new CancellationTokenSource();
+                await foreach (var issueList in GitHubGraphQLService.GetRepositoryIssues(username, repositoryName, cancellationTokenSournce.Token))
+                {
+                    foreach (var issue in issueList)
+                        Console.WriteLine(issue);
 
-                if (++count > 5)
-                    cancellationTokenSournce.Cancel();
+                    if (++count > 5)
+                        cancellationTokenSournce.Cancel();
+                }
+            }
+            catch(OperationCanceledException)
+            {
+                Console.WriteLine("GetRepositories Cancelled");
             }
 
             Console.WriteLine("Completed. Press Any Key.");

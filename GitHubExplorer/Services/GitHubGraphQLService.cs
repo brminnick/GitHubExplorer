@@ -53,7 +53,7 @@ namespace GitHubExplorer
 
         public static async Task<GitHubUser> GetUser(string username)
         {
-            var requestString = "query { user(login:" + username + "){ name,company,createdAt, followers{ totalCount }}}";
+            var requestString = "query { user(login: \"" + username + "\"){ name,company,createdAt, followers{ totalCount }}}";
 
             var data = await ExecuteGraphQLRequest(() => GitHubApiClient.UserQuery(new GraphQLRequest(requestString))).ConfigureAwait(false);
 
@@ -71,15 +71,17 @@ namespace GitHubExplorer
 
         public static async IAsyncEnumerable<List<GitHubIssue>> GetRepositoryIssues(string repositoryOwner, string repositoryName, CancellationToken cancellationToken, int numberOfIssuesPerRequest = 100)
         {
-            IssuesConnection issuesConnection = null;
+            IssuesConnection? issuesConnection = null;
 
             do
             {
                 issuesConnection = await GetIssueConnection(repositoryOwner, repositoryName, numberOfIssuesPerRequest, issuesConnection?.PageInfo?.EndCursor).ConfigureAwait(false);
 
                 yield return issuesConnection.IssueList;
+
+                cancellationToken.ThrowIfCancellationRequested();
             }
-            while (!cancellationToken.IsCancellationRequested && (issuesConnection?.PageInfo?.HasNextPage is true));
+            while (issuesConnection?.PageInfo?.HasNextPage is true);
         }
 
         static async Task<IssuesConnection> GetIssueConnection(string repositoryOwner, string repositoryName, int numberOfIssuesPerRequest, string endCursor)
@@ -102,7 +104,7 @@ namespace GitHubExplorer
 
             return response.Data;
 
-            TimeSpan pollyRetryAttempt(int attemptNumber) => TimeSpan.FromSeconds(Math.Pow(2, attemptNumber));
+            static TimeSpan pollyRetryAttempt(int attemptNumber) => TimeSpan.FromSeconds(Math.Pow(2, attemptNumber));
         }
 
         static HttpClient CreateHttpClient()
