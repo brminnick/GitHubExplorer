@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace GitHubExplorer
 {
@@ -8,7 +9,7 @@ namespace GitHubExplorer
         public const string PersonalAccessToken = "Enter Token Here";
         public const string APIUrl = "https://api.github.com/graphql";
 
-        public static readonly Dictionary<string, string> GitHubRepoDictionary = new Dictionary<string, string>
+        public static readonly ReadOnlyDictionary<string, string> GitHubRepoDictionary = new(new Dictionary<string,string>
         {
             {"Newtonsoft.Json","jamesnk"},
             {"Newtonsoft.Json.Schema","jamesnk"},
@@ -16,7 +17,7 @@ namespace GitHubExplorer
             {"AsyncAwaitBestPractices","brminnick"},
             {"ImproveXamarinBuildTimes","brminnick"},
             {"FaceOff","brminnick"},
-            {"EntryCustomReturnPlugin","brminnick"},
+            {"GitTrends","brminnick"},
             {"XamList","brminnick"},
             {"TextMood","brminnick"},
 
@@ -62,6 +63,6 @@ namespace GitHubExplorer
             {"FlamedTVLauncher","Redth"},
             {"AndHUD","Redth"},
             {"HttpTwo","Redth"},
-        };
+        });
     }
 }
