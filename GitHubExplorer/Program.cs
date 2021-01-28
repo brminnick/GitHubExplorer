@@ -7,7 +7,7 @@ namespace GitHubExplorer
 {
     class MainClass
     {
-        public static async Task Main(string[] args)
+        public static async Task Main()
         {
             var username = GitHubConstants.GitHubRepoDictionary.Values.First();
             var repositoryName = GitHubConstants.GitHubRepoDictionary.Keys.First();
