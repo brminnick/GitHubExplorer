@@ -1,37 +1,25 @@
 ﻿using System;
 using System.Text;
-using Newtonsoft.Json;
 
 namespace GitHubExplorer
 {
     public class GitHubUser
     {
-        [JsonConstructor]
-        public GitHubUser(GitHubFollowers followers) => Followers = followers;
-
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("company")]
-        public string Company { get; set; }
-
-        [JsonProperty("createdAt")]
-        public DateTimeOffset AccountCreationDate { get; set; }
-
-        public int FollowerCount
+        public GitHubUser(string name, string company, DateTimeOffset createdAt, GitHubFollowers followers)
         {
-            get => Followers?.Count ?? -1;
-            set
-            {
-                if (Followers is null)
-                    Followers = new GitHubFollowers { Count = value };
-                else
-                    Followers.Count = value;
-            }
+            Name = name;
+            Company = company;
+            AccountCreationDate = createdAt;
+            FollowerCount = followers.Count;
         }
 
-        [JsonProperty("followers")]
-        GitHubFollowers Followers { get; set; }
+        public string Name { get; }
+
+        public string Company { get; }
+
+        public DateTimeOffset AccountCreationDate { get; }
+
+        public int FollowerCount { get; }
 
         public override string ToString()
         {
@@ -47,7 +35,8 @@ namespace GitHubExplorer
 
     public class GitHubFollowers
     {
-        [JsonProperty("totalCount")]
-        public int Count { get; set; }
+        public GitHubFollowers(int count) => Count = count;
+
+        public int Count { get; }
     }
 }

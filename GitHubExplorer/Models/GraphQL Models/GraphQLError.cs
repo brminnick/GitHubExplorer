@@ -8,22 +8,19 @@ namespace GitHubExplorer
     {
         public GraphQLError(string message, GraphQLLocation[] locations) => (Message, Locations) = (message, locations);
 
-        [JsonProperty("message")]
         public string Message { get; }
 
-        [JsonProperty("locations")]
         public GraphQLLocation[] Locations { get; }
 
         [JsonExtensionData]
-        public IDictionary<string, JToken> AdditonalEntries { get; set; }
+        public Dictionary<string, JToken> AdditonalEntries { get; set; } = new();
     }
 
     class GraphQLLocation
     {
-        [JsonProperty("line")]
-        public long Line { get; }
+        public GraphQLLocation(long line, long column) => (Line, Column) = (line, column);
 
-        [JsonProperty("column")]
+        public long Line { get; }
         public long Column { get; }
     }
 }

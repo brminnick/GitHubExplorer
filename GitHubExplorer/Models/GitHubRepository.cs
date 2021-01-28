@@ -1,54 +1,30 @@
 ﻿using System.Text;
-using Newtonsoft.Json;
 
 namespace GitHubExplorer
 {
     public class GitHubRepository
     {
-        public GitHubRepository(Owner owner, Stargazers stargazers) =>
-            (RepositoryOwner, RepositoryStargazers) = (owner, stargazers);
-
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("description")]
-        public string Description { get; set; }
-
-        [JsonProperty("forkCount")]
-        public long ForkCount { get; set; }
-
-        [JsonProperty("issues")]
-        public IssuesConnection Issues { get; set; }
-
-        public string Owner
+        public GitHubRepository(string name, string description, long forkCount, IssuesConnection? issues, Owner owner, Stargazers stargazers)
         {
-            get => RepositoryOwner?.Login;
-            set
-            {
-                if (RepositoryOwner is null)
-                    RepositoryOwner = new Owner { Login = value };
-                else
-                    RepositoryOwner.Login = value;
-            }
+            Name = name;
+            Description = description;
+            ForkCount = forkCount;
+            Owner = owner.Login;
+            Issues = issues;
+            Stargazers = stargazers.TotalCount;
         }
 
-        public int Stargazers
-        {
-            get => RepositoryStargazers?.TotalCount ?? -1;
-            set
-            {
-                if (RepositoryStargazers is null)
-                    RepositoryStargazers = new Stargazers { TotalCount = value };
-                else
-                    RepositoryStargazers.TotalCount = value;
-            }
-        }
+        public string Owner { get; }
 
-        [JsonProperty("owner")]
-        Owner RepositoryOwner { get; set; }
+        public int? Stargazers { get; }
 
-        [JsonProperty("stargazers")]
-        Stargazers RepositoryStargazers { get; set; }
+        public string Name { get; }
+
+        public string Description { get; }
+
+        public long ForkCount { get; }
+
+        public IssuesConnection? Issues { get; }
 
         public override string ToString()
         {
@@ -66,13 +42,15 @@ namespace GitHubExplorer
 
     public class Owner
     {
-        [JsonProperty("login")]
-        public string Login { get; set; }
+        public Owner(string login) => Login = login;
+
+        public string Login { get; }
     }
 
     public class Stargazers
     {
-        [JsonProperty("totalCount")]
-        public int TotalCount { get; set; }
+        public Stargazers(int totalCount) => TotalCount = totalCount;
+
+        public int TotalCount { get; }
     }
 }

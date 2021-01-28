@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using System.Collections.Generic;
 
 namespace GitHubExplorer
 {
     public class IssuesConnection
     {
-        public IssuesConnection(List<GitHubIssue> issueList, PageInfo pageInfo) =>
-            (IssueList, PageInfo) = (issueList, pageInfo);
+        public IssuesConnection(GitHubIssue[] nodes, PageInfo pageInfo) =>
+            (IssueList, PageInfo) = (nodes, pageInfo);
 
-        [JsonProperty("nodes")]
-        public List<GitHubIssue> IssueList { get; }
+        public IReadOnlyList<GitHubIssue> IssueList { get; }
 
-        [JsonProperty("pageInfo")]
         public PageInfo PageInfo { get; }
     }
 }

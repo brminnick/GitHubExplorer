@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace GitHubExplorer
 {
@@ -21,15 +20,12 @@ namespace GitHubExplorer
 
             try
             {
-                var count = 0;
-                var cancellationTokenSournce = new CancellationTokenSource();
+                var cancellationTokenSournce = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+
                 await foreach (var issueList in GitHubGraphQLService.GetRepositoryIssues(username, repositoryName, cancellationTokenSournce.Token))
                 {
                     foreach (var issue in issueList)
                         Console.WriteLine(issue);
-
-                    if (++count > 5)
-                        cancellationTokenSournce.Cancel();
                 }
             }
             catch(OperationCanceledException)

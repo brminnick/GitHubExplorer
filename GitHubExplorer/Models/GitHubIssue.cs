@@ -1,30 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
-
-using Newtonsoft.Json;
 
 namespace GitHubExplorer
 {
     public class GitHubIssue
     {
-        [JsonProperty("title")]
-        public string Title { get; set; }
+        public GitHubIssue(string title, string body, DateTimeOffset createdAt, DateTimeOffset? closedAt, string state)
+        {
+            Title = title;
+            Body = body;
+            CreatedAt = createdAt;
+            ClosedAt = closedAt;
+            State = state;
+        }
 
-        [JsonProperty("body")]
-        public string Body { get; set; }
+        public string Title { get; }
 
-        [JsonProperty("createdAt")]
-        public DateTimeOffset CreatedAt { get; set; }
+        public string Body { get; }
 
-        [JsonProperty("closedAt")]
-        public DateTimeOffset? ClosedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; }
 
-        [JsonProperty("state")]
-        public string State { get; set; }
+        public DateTimeOffset? ClosedAt { get; }
 
-        [JsonProperty("pageInfo")]
-        public PageInfo PageInfo { get; set; }
+        public string State { get; }
 
         public override string ToString()
         {

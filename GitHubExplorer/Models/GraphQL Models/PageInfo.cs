@@ -1,19 +1,21 @@
-﻿using Newtonsoft.Json;
-
-namespace GitHubExplorer
+﻿namespace GitHubExplorer
 {
     public class PageInfo
     {
-        [JsonProperty("endCursor")]
-        public string EndCursor { get; set; }
+        public PageInfo(string endCursor, bool hasNextPage, bool hasPreviousPage, string startCursor)
+        {
+            EndCursor = endCursor;
+            HasNextPage = hasNextPage;
+            HasPreviousPage = hasPreviousPage;
+            StartCursor = startCursor;
+        }
 
-        [JsonProperty("hasNextPage")]
-        public bool HasNextPage { get; set; }
+        public string EndCursor { get; }
 
-        [JsonProperty("hasPreviousPage")]
-        public bool HasPreviousPage { get; set; }
+        public bool HasNextPage { get; }
 
-        [JsonProperty("startCursor")]
-        public string StartCursor { get; set; }
+        public bool HasPreviousPage { get; }
+
+        public string StartCursor { get; }
     }
 }
