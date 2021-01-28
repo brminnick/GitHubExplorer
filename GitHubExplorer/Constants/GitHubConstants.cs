@@ -9,7 +9,7 @@ namespace GitHubExplorer
         public const string PersonalAccessToken = "Enter Token Here";
         public const string APIUrl = "https://api.github.com/graphql";
 
-        public static readonly ReadOnlyDictionary<string, string> GitHubRepoDictionary = new(new Dictionary<string,string>
+        public static ReadOnlyDictionary<string, string> GitHubRepoDictionary { get; } = new(new Dictionary<string, string>
         {
             {"Newtonsoft.Json","jamesnk"},
             {"Newtonsoft.Json.Schema","jamesnk"},
